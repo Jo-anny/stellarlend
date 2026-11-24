@@ -20,6 +20,7 @@ use crate::risk_management::RiskManagementError;
 use crate::risk_params::RiskParamsError;
 use crate::treasury::TreasuryError;
 use crate::upgrade::UpgradeError;
+use crate::auction::DutchAuctionError;
 use crate::user_cap::UserCapError;
 use crate::fee_switch::FeeSwitchError;
 use crate::withdraw::WithdrawError;
@@ -388,6 +389,18 @@ impl_from_error!(WithdrawError, {
     WithdrawError::Undercollateralized => LendingError::InvalidState,
 });
 
+impl_from_error!(DutchAuctionError, {
+    DutchAuctionError::Unauthorized => LendingError::Unauthorized,
+    DutchAuctionError::InvalidDuration => LendingError::InvalidParameter,
+    DutchAuctionError::InvalidDecay => LendingError::InvalidParameter,
+    DutchAuctionError::AuctionNotFound => LendingError::NotFound,
+    DutchAuctionError::AuctionExpired => LendingError::InvalidState,
+    DutchAuctionError::AuctionCancelled => LendingError::InvalidState,
+    DutchAuctionError::InvalidAmount => LendingError::InvalidAmount,
+    DutchAuctionError::InsufficientPayment => LendingError::InsufficientBalance,
+    DutchAuctionError::Overflow => LendingError::Overflow,
+    DutchAuctionError::PositionHealthy => LendingError::InvalidState,
+    DutchAuctionError::AuctionAlreadyExists => LendingError::AlreadyExists,
 impl_from_error!(UserCapError, {
     UserCapError::Unauthorized => LendingError::Unauthorized,
     UserCapError::InvalidCap => LendingError::InvalidParameter,
@@ -544,5 +557,6 @@ impl_into_core!(RiskParamsError, RiskParamsError);
 impl_into_core!(TreasuryError, TreasuryError);
 impl_into_core!(WithdrawError, WithdrawError);
 impl_into_core!(GovernanceError, GovernanceError);
+impl_into_core!(DutchAuctionError, DutchAuctionError);
 impl_into_core!(UserCapError, UserCapError);
 impl_into_core!(FeeSwitchError, FeeSwitchError);
